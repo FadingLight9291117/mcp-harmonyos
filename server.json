@@ -6,12 +6,12 @@
     "url": "https://github.com/FadingLight9291117/mcp-harmonyos",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.3",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "mcp-harmonyos",
-      "version": "1.0.0",
+      "version": "1.0.3",
       "transport": {
         "type": "stdio"
       }
