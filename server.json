@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.FadingLight9291117/mcp-harmonyos",
+  "description": "MCP server for HarmonyOS development - interact with projects, devices, and applications",
+  "repository": {
+    "url": "https://github.com/FadingLight9291117/mcp-harmonyos",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "mcp-harmonyos",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

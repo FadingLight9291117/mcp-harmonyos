@@ -1,5 +1,6 @@
 {
   "name": "mcp-harmonyos",
+  "mcpName": "io.github.fadinglight9291117/harmonyos",
   "type": "module",
   "version": "1.0.0",
   "description": "Model Context Protocol server for HarmonyOS development - enables AI assistants to interact with HarmonyOS projects, devices, and applications",
