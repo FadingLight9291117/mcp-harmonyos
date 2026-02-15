@@ -1,6 +1,8 @@
 # MCP HarmonyOS
 
 [![NPM Version](https://img.shields.io/npm/v/mcp-harmonyos)](https://www.npmjs.com/package/mcp-harmonyos)
+[![GitHub Stars](https://img.shields.io/github/stars/FadingLight9291117/mcp-harmonyos)](https://github.com/FadingLight9291117/mcp-harmonyos)
+[![License](https://img.shields.io/npm/l/mcp-harmonyos)](https://github.com/FadingLight9291117/mcp-harmonyos/blob/main/LICENSE)
 
 A Model Context Protocol (MCP) server for HarmonyOS development. This server enables AI assistants like Claude to interact with HarmonyOS projects, devices, and applications.
 
