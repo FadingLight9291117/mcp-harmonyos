@@ -1,0 +1,41 @@
+name: mcp-harmonyos
+version: 1.0.0
+description: Model Context Protocol server for HarmonyOS development - enables AI assistants to interact with HarmonyOS projects, devices, and applications
+author: FadingLight9291117
+homepage: https://github.com/FadingLight9291117/mcp-harmonyos
+license: MIT
+
+categories:
+  - Development Tools
+  - Build & Deploy
+
+platforms:
+  - macos
+  - linux
+  - windows
+
+runtime:
+  type: node
+  version: ">=18.0.0"
+
+config:
+  schema:
+    type: object
+    properties: {}
+    required: []
+
+tools:
+  - name: harmonyos_list_devices
+    description: List all connected HarmonyOS devices
+  - name: harmonyos_get_device_info
+    description: Get detailed information about a specific device
+  - name: harmonyos_get_project_info
+    description: Get HarmonyOS project information (bundleName, version, modules)
+  - name: harmonyos_list_modules
+    description: List all modules in a HarmonyOS project with their types (HAP/HSP/HAR)
+  - name: harmonyos_check_build_outputs
+    description: Check if build outputs exist and list them
+  - name: harmonyos_list_installed_apps
+    description: List all installed applications on a device
+  - name: harmonyos_get_app_info
+    description: Get detailed information about an installed application
