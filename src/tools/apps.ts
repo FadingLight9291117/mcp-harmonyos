@@ -29,7 +29,7 @@ export const listInstalledApps: ToolDefinition<
   },
   schema: ListInstalledAppsSchema,
   handler: async ({ deviceId }) => {
-    const output = hdcExec(`shell "bm dump -a"`, {
+    const output = await hdcExec(["shell", "bm", "dump", "-a"], {
       deviceId,
       timeout: 15000,
     });
@@ -92,7 +92,7 @@ export const getAppInfo: ToolDefinition<typeof GetAppInfoSchema> = {
   },
   schema: GetAppInfoSchema,
   handler: async ({ deviceId, bundleName }) => {
-    const output = hdcExec(`shell "bm dump -n ${bundleName}"`, {
+    const output = await hdcExec(["shell", "bm", "dump", "-n", bundleName], {
       deviceId,
       timeout: 10000,
     });

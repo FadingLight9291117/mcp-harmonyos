@@ -1,4 +1,7 @@
-import { execSync } from "child_process";
+import { execFile } from "child_process";
+import { promisify } from "util";
+
+const execFileAsync = promisify(execFile);
 
 export interface HdcOptions {
   deviceId?: string;
@@ -6,11 +9,17 @@ export interface HdcOptions {
 }
 
 /**
- * Execute an hdc command and return the output string.
- * If deviceId is provided, the command targets that device via `-t`.
+ * Execute an hdc command asynchronously and return stdout.
+ * Args are passed as an argv array so no shell parsing occurs — values like
+ * deviceId or bundleName cannot inject extra commands.
  */
-export function hdcExec(command: string, options: HdcOptions = {}): string {
+export async function hdcExec(args: string[], options: HdcOptions = {}): Promise<string> {
   const { deviceId, timeout = 5000 } = options;
-  const cmd = deviceId ? `hdc -t ${deviceId} ${command}` : `hdc ${command}`;
-  return execSync(cmd, { encoding: "utf-8", timeout });
+  const fullArgs = deviceId ? ["-t", deviceId, ...args] : args;
+  const { stdout } = await execFileAsync("hdc", fullArgs, {
+    encoding: "utf-8",
+    timeout,
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  return stdout;
 }

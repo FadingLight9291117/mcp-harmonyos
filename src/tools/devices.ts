@@ -19,14 +19,12 @@ export const listDevices: ToolDefinition<typeof ListDevicesSchema> = {
   },
   schema: ListDevicesSchema,
   handler: async () => {
-    const output = hdcExec("list targets");
-    const lines = output.trim().split("\n");
-    const devices: HarmonyOSDevice[] = lines
-      .filter((line) => line && !line.includes("list targets"))
-      .map((line) => ({
-        udid: line.trim(),
-        status: "connected",
-      }));
+    const output = await hdcExec(["list", "targets"]);
+    const devices: HarmonyOSDevice[] = output
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line && line !== "[Empty]" && !line.includes("list targets"))
+      .map((udid) => ({ udid, status: "connected" }));
 
     return toolResult(devices);
   },
@@ -55,7 +53,7 @@ export const getDeviceInfo: ToolDefinition<typeof GetDeviceInfoSchema> = {
   },
   schema: GetDeviceInfoSchema,
   handler: async ({ deviceId }) => {
-    const shellOutput = hdcExec(`shell "getprop"`, {
+    const shellOutput = await hdcExec(["shell", "getprop"], {
       deviceId,
       timeout: 10000,
     });
