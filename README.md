@@ -72,6 +72,31 @@ Add to your Claude Desktop configuration file:
 
 ## Available Tools
 
+All 20 tools at a glance (detailed docs for selected tools follow):
+
+| Category | Tool | Description |
+|---|---|---|
+| Device | `harmonyos_list_devices` | List all connected HarmonyOS devices |
+| Device | `harmonyos_get_device_info` | Get detailed device information |
+| Device | `harmonyos_reboot_device` | Reboot a connected device |
+| Project | `harmonyos_get_project_info` | Get project info (bundleName, version, modules) |
+| Project | `harmonyos_list_modules` | List project modules (HAP/HSP/HAR) |
+| Project | `harmonyos_list_dependencies` | Parse oh-package.json5 dependency tree (root + modules) |
+| Build | `harmonyos_check_build_outputs` | Check whether build outputs exist |
+| Build | `harmonyos_build` | Trigger an hvigorw build (assembleHap/App/Hsp) |
+| App | `harmonyos_list_installed_apps` | List installed apps on a device |
+| App | `harmonyos_get_app_info` | Get detailed app information |
+| App | `harmonyos_install_app` | Install a HAP package |
+| App | `harmonyos_uninstall_app` | Uninstall an app by bundle name |
+| App | `harmonyos_launch_app` | Launch an app via `aa start` |
+| App | `harmonyos_clear_app_data` | Clear app data/cache (data/cache/all) |
+| File | `harmonyos_push_file` | Push a local file to the device |
+| File | `harmonyos_pull_file` | Pull a file from the device |
+| Log/Diag | `harmonyos_tail_hilog` | Snapshot hilog buffer (tag/level filter) |
+| Log/Diag | `harmonyos_screenshot` | Capture device screen to a local JPEG |
+| Log/Diag | `harmonyos_get_crash_logs` | List crash logs, optionally fetch the latest |
+| Log/Diag | `harmonyos_get_app_memory` | Memory report of a running app (hidumper) |
+
 ### Device Management
 
 #### `harmonyos_list_devices`

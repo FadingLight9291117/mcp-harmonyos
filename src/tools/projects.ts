@@ -6,6 +6,67 @@ import { ProjectInfo, ModuleInfo } from "../types/harmonyos-types.js";
 import { parseJson5 } from "../utils/json5.js";
 import { toolResult } from "../utils/response.js";
 
+// --- List Dependencies ---
+
+const ListDependenciesSchema = z.object({
+  projectPath: z.string(),
+});
+
+export const listDependencies: ToolDefinition<typeof ListDependenciesSchema> = {
+  definition: {
+    name: "harmonyos_list_dependencies",
+    description:
+      "Parse oh-package.json5 in the project root and each module to list all npm/ohpm dependencies and devDependencies.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        projectPath: {
+          type: "string",
+          description: "Absolute path to the HarmonyOS project root",
+        },
+      },
+      required: ["projectPath"],
+    },
+  },
+  schema: ListDependenciesSchema,
+  handler: async ({ projectPath }) => {
+    function parsePkg(pkgPath: string) {
+      if (!existsSync(pkgPath)) return null;
+      try {
+        const content = readFileSync(pkgPath, "utf-8");
+        const json = parseJson5(content);
+        return {
+          name: json.name,
+          version: json.version,
+          dependencies: json.dependencies ?? {},
+          devDependencies: json.devDependencies ?? {},
+          dynamicDependencies: json.dynamicDependencies ?? {},
+        };
+      } catch {
+        return null;
+      }
+    }
+
+    const root = parsePkg(join(projectPath, "oh-package.json5"));
+    const modules: Record<string, ReturnType<typeof parsePkg>> = {};
+
+    // 从 build-profile.json5 找模块列表
+    const buildProfilePath = join(projectPath, "build-profile.json5");
+    if (existsSync(buildProfilePath)) {
+      try {
+        const bp = parseJson5(readFileSync(buildProfilePath, "utf-8"));
+        for (const m of bp.modules ?? []) {
+          const srcPath = m.srcPath ?? m.name;
+          const modPkg = parsePkg(join(projectPath, srcPath, "oh-package.json5"));
+          if (modPkg) modules[m.name] = modPkg;
+        }
+      } catch { /* ignore */ }
+    }
+
+    return toolResult({ root, modules });
+  },
+};
+
 // --- Get Project Info ---
 
 const GetProjectInfoSchema = z.object({

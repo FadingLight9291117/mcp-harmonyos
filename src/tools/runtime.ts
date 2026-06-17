@@ -5,6 +5,105 @@ import { ToolDefinition } from "../types/tool.js";
 import { hdcExec } from "../utils/hdc.js";
 import { toolResult } from "../utils/response.js";
 
+// --- Uninstall App ---
+
+const UninstallAppSchema = z.object({
+  deviceId: z.string(),
+  bundleName: z.string(),
+});
+
+export const uninstallApp: ToolDefinition<typeof UninstallAppSchema> = {
+  definition: {
+    name: "harmonyos_uninstall_app",
+    description: "Uninstall an app from a connected HarmonyOS device by bundle name.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        deviceId: { type: "string", description: "The device UDID" },
+        bundleName: { type: "string", description: "App bundle name (e.g. com.example.myapp)" },
+      },
+      required: ["deviceId", "bundleName"],
+    },
+  },
+  schema: UninstallAppSchema,
+  handler: async ({ deviceId, bundleName }) => {
+    const output = await hdcExec(["shell", "bm", "uninstall", "-n", bundleName], {
+      deviceId,
+      timeout: 30_000,
+    });
+    return toolResult({ bundleName, output: output.trim() });
+  },
+};
+
+// --- Clear App Data ---
+
+const ClearAppDataSchema = z.object({
+  deviceId: z.string(),
+  bundleName: z.string(),
+  type: z.enum(["data", "cache", "all"]).default("data"),
+});
+
+export const clearAppData: ToolDefinition<typeof ClearAppDataSchema> = {
+  definition: {
+    name: "harmonyos_clear_app_data",
+    description:
+      "Clear an app's data, cache, or both on a HarmonyOS device. Useful for resetting app state during debugging.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        deviceId: { type: "string", description: "The device UDID" },
+        bundleName: { type: "string", description: "App bundle name" },
+        type: {
+          type: "string",
+          enum: ["data", "cache", "all"],
+          description: "What to clear: 'data' (default), 'cache', or 'all' (both)",
+        },
+      },
+      required: ["deviceId", "bundleName"],
+    },
+  },
+  schema: ClearAppDataSchema,
+  handler: async ({ deviceId, bundleName, type }) => {
+    const results: Record<string, string> = {};
+    if (type === "data" || type === "all") {
+      results.data = (
+        await hdcExec(["shell", "bm", "clean", "-n", bundleName, "-d"], { deviceId, timeout: 15_000 })
+      ).trim();
+    }
+    if (type === "cache" || type === "all") {
+      results.cache = (
+        await hdcExec(["shell", "bm", "clean", "-n", bundleName, "-c"], { deviceId, timeout: 15_000 })
+      ).trim();
+    }
+    return toolResult({ bundleName, type, results });
+  },
+};
+
+// --- Reboot Device ---
+
+const RebootDeviceSchema = z.object({
+  deviceId: z.string(),
+});
+
+export const rebootDevice: ToolDefinition<typeof RebootDeviceSchema> = {
+  definition: {
+    name: "harmonyos_reboot_device",
+    description: "Reboot a connected HarmonyOS device. The device will be temporarily unavailable after this call.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        deviceId: { type: "string", description: "The device UDID" },
+      },
+      required: ["deviceId"],
+    },
+  },
+  schema: RebootDeviceSchema,
+  handler: async ({ deviceId }) => {
+    await hdcExec(["target", "boot"], { deviceId, timeout: 10_000 });
+    return toolResult({ deviceId, status: "reboot command sent" });
+  },
+};
+
 // --- Install App ---
 
 const InstallAppSchema = z.object({
