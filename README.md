@@ -1,5 +1,7 @@
 # MCP HarmonyOS
 
+**npm**: https://www.npmjs.com/package/mcp-harmonyos
+
 [![NPM Version](https://img.shields.io/npm/v/mcp-harmonyos)](https://www.npmjs.com/package/mcp-harmonyos)
 [![GitHub Stars](https://img.shields.io/github/stars/FadingLight9291117/mcp-harmonyos)](https://github.com/FadingLight9291117/mcp-harmonyos)
 [![License](https://img.shields.io/npm/l/mcp-harmonyos)](https://github.com/FadingLight9291117/mcp-harmonyos/blob/main/LICENSE)
